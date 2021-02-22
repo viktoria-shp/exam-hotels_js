@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Hotels</title>
+    <link rel="stylesheet" href="./styles/slick-theme.css"/>
+    <link rel="stylesheet" href="./styles/style.scss"/>
+    <link rel="icon" href="./img/favicon-16x16.png">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/uikit@3.5.7/dist/css/uikit.min.css"
+    />
+    <script src="http://maps.google.com/maps/api/js?key=AIzaSyCCtqo1cC4VpQfgYyZunS0bHpCk4IV0ATU&region=US&language=en"
+            type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+</head>
+<body>
+<div class="uk-container container">
+
+    <form class="form uk-search uk-search-default" id="form">
+        <fieldset class="uk-fieldset">
+            <label class="uk-form-label" for="city">City</label>
+            <input class="form__input uk-search-input uk-form-width-large" type="search" placeholder="Input City" name="title" id="city" />
+            <div>
+                <label class="uk-form-label" for="check_in">Check In</label>
+                <input class="form__input uk-search-input uk-form-width-large" type="date" placeholder="Check In Date" name="check_in" id="check_in" />
+            </div>
+            <div>
+                <label class="uk-form-label" for="check_out">Check Out</label>
+                <input class="form__input uk-search-input uk-form-width-large" type="date" placeholder="Check Out Date" name="check_out" id="check_out" />
+            </div>
+            <div>
+                <label class="uk-form-label" for="rooms">Rooms</label>
+                <input class="form__input uk-search-input uk-form-width-large" type="number" value="1" min="1" max="5" step="1" placeholder="Rooms" name="rooms" id="rooms" />
+            </div>
+            <button class="form__button uk-button" type="submit">search</button>
+            <!--<a href="/favorite.html" class="form__button uk-button favorite_btn">my film</a>-->
+        </fieldset>
+    </form>
+
+    <div
+            id="map"
+            class="uk-child-width-1-1"
+            style="margin-bottom:20px;width:100%;height:500px;display: none;"
+    ></div>
+    <div id="cards" class="uk-child-width-1-2@m uk-child-width-1-4@l uk-flex uk-flex-center" uk-grid
+         uk-height-match="target: > div > .uk-card">
+    </div>
+    <ul class="uk-pagination"></ul>
+    <div
+            id="cardHotel"
+            class="uk-child-width-1-1"
+            uk-grid
+    ></div>
+    <div id="loading-full" uk-spinner="ratio: 4.5"></div>
+</div>
+<script src="./js//ajax.js"></script>
+<!--<script src="https://cdn.jsdelivr.net/npm/uikit@3.5.7/dist/js/uikit.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/uikit@3.5.7/dist/js/uikit-icons.min.js"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/uikit.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/components/pagination.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/uikit/2.27.2/js/components/notify.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.min.js"></script>
+<!--<script src="./js//pagination.js"></script>-->
+</body>
+</html>

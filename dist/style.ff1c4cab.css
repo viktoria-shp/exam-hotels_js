@@ -1,0 +1,193 @@
+@charset "UTF-8";
+body {
+  /*height: 100%;*/
+  background-image: url(/bg1.e7999784.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+}
+
+body::after {
+  content: "";
+  background: black;
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: -1;
+}
+
+.container {
+  display: flex !important;
+  align-items: center;
+  padding: 50px 0;
+  width: 100%;
+  flex-direction: column;
+}
+
+.form {
+  min-width: 500px;
+  z-index: 2;
+  text-align: center;
+  color: #fff !important;
+  margin-bottom: 40px !important;
+}
+.form__input {
+  border: 2px solid #fff !important;
+}
+.form .uk-search-input {
+  color: black;
+  padding: 10px;
+  height: auto;
+  margin-bottom: 20px;
+  background: #fff !important;
+}
+.form__radio {
+  display: flex;
+  justify-content: space-between;
+}
+.form .uk-radio {
+  margin-right: 5px;
+}
+.form .uk-radio:checked {
+  background-color: #213040;
+}
+.form .uk-radio:selection {
+  background-color: #213040;
+}
+.form__button {
+  color: #fff;
+  background-color: #213040;
+}
+.form__button:hover {
+  background-color: #1e87f0;
+}
+
+.uk-card .uk-card-body .favorite_movie:after {
+  content: "❤";
+  color: #213040;
+  cursor: pointer;
+}
+
+.uk-card .uk-card-body .favorite_movie:hover:after, .uk-card .uk-card-body .favorite_movie.active_add:after {
+  color: #39f;
+}
+
+#cardMovie {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+}
+
+.uk-pagination li a {
+  color: #fff !important;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.uk-pagination li span {
+  color: #fff !important;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.uk-pagination > .uk-active > * {
+  color: #1c61ac !important;
+}
+
+.uk-pagination a:hover {
+  color: #39f !important;
+}
+
+.favorite_btn, .form__button {
+  color: #fff !important;
+  background-color: #213040 !important;
+}
+
+.favorite_btn:hover, .form__button:hover {
+  background-color: #1e87f0 !important;
+}
+
+#cardHotel {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.uk-fieldset {
+  text-align: left;
+}
+
+.uk-fieldset .uk-form-label {
+  color: #fff;
+}
+
+.back-to-list-fixed {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+#loading-full {
+  position: fixed;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.bg1 {
+  background-image: url(/bg1.e7999784.jpg);
+}
+
+.bg2 {
+  background-image: url(/bg2.10c121cd.jpg);
+}
+
+.bg3 {
+  background-image: url(/bg3.3050e38c.jpg);
+}
+
+.bg4 {
+  background-image: url(/bg4.128f0002.jpg);
+}
+
+.bg5 {
+  background-image: url(/bg5.ba3a00a8.jpg);
+}
+
+.bg6 {
+  background-image: url(/bg6.efb3c26f.jpg);
+}
+
+.bg7 {
+  background-image: url(/bg7.0056eebd.jpg);
+}
+
+.bg8 {
+  background-image: url(/bg8.59dda337.jpg);
+}
+
+.bg9 {
+  background-image: url(/bg9.a1bce5b6.jpg);
+}
+
+.bg10 {
+  background-image: url(/bg10.54c69f00.jpg);
+}
+
+.bg11 {
+  background-image: url(/bg11.227d36ae.jpg);
+}
+
+/*# sourceMappingURL=/style.ff1c4cab.css.map */
