@@ -17938,7 +17938,7 @@ const PLACE_URL = "https://us1.locationiq.com/v1/search.php";
 const place_api_key = "pk.8abf2bed23931624b1c56652a88f7dbc";
 const HOTELS_BASE_URL = "https://hotels-com-free.p.rapidapi.com";
 const HOTELS_HEADERS = {
-  "x-rapidapi-keys": ["4debea6015msh9c562157b23b19bp1df6d5jsn193d72d2296f", "d6d98779c4msh39577c5f567858fp122552jsn391453a39028", "4281f2dbd4mshc771c4185d5c03cp1257b7jsn4c9c48725c95"],
+  "x-rapidapi-keys": ["4debea6015msh9c562157b23b19bp1df6d5jsn193d72d2296f", "d6d98779c4msh39577c5f567858fp122552jsn391453a39028", "4281f2dbd4mshc771c4185d5c03cp1257b7jsn4c9c48725c95", "7b39bda84emsh5e805517d4b6d51p13f611jsn6cf4b9e21ddc", "f79f98a041msh1def5d5596ee87dp152fafjsn22e7a5e7e336"],
   "x-rapidapi-key": "4debea6015msh9c562157b23b19bp1df6d5jsn193d72d2296f",
   "x-rapidapi-host": "hotels-com-free.p.rapidapi.com"
 };
@@ -18046,11 +18046,10 @@ const getSearchNearby = async (params = {}) => {
     params.checkOut = params.checkOut || (0, _moment.default)().add(12, 'days').format("YYYY-MM-DD");
     params.locale = params.locale || 'en_US';
     params.rooms = params.rooms || 1;
-    params.currency = params.currency || 'USD';
-    params.pageNumber = params.pageNumber || 1;
-    globalParams = params; //await sleep(1000)
-    //const res = await fetch("https://hotels-com-free.p.rapidapi.com/srle/listing/v1/brands/hotels.com?checkIn=2021-01-27&checkOut=2021-01-28&lat=37.788719679657554&lon=-122.40057774847898&locale=en_US&rooms=1&currency=USD&pageNumber=2", {
+    params.currency = params.currency || 'USD'; //params.sortOrder = params.sortOrder || 'BEST_SELLER';
 
+    params.pageNumber = params.pageNumber || 1;
+    globalParams = params;
     const res = await fetch(`${_http.urls.hotels_search_nearby}?${convertObjToQueryString(params)}`, {
       "method": "GET",
       "headers": prepareHeaders(_http.headers.hotels_headers)
@@ -18065,7 +18064,12 @@ const getSearchNearby = async (params = {}) => {
     const parsedRes = await res.json();
     return parsedRes;
   } catch (error) {
-    console.log(error); //UiKit.notify({message: error, status: "danger"});
+    console.log(error);
+
+    _uikit.default.notify({
+      message: "Error",
+      status: "danger"
+    });
   }
 
   ;
@@ -18102,8 +18106,7 @@ const getDetails = async (hotelID = 0, params = {}) => {
     delete params.lon;
     delete params.pageNumber;
     delete params.hotel_id;
-    await sleep(1000); //const res = await fetch("https://hotels-com-free.p.rapidapi.com/pde/property-details/v1/hotels.com/106346?checkIn=2021-01-27&locale=en_US&rooms=1&checkOut=2021-01-28&currency=USD&include=neighborhood", {
-
+    await sleep(1000);
     const res = await fetch(`${_http.urls.hotels_details}/${hotelID}?${convertObjToQueryString(params)}`, {
       "method": "GET",
       "headers": prepareHeaders(_http.headers.hotels_headers)
@@ -18141,8 +18144,7 @@ const getDetailsReviews = async (hotelID = 0, params = {}) => {
     params.hotel_id = params.hotel_id || 0;
     params.loc = params.loc || 'en_US';
     params.page = params.page || 1;
-    await sleep(1000); //const res = await fetch("https://hotels-com-free.p.rapidapi.com/mobile_service/property-content/v1/hotels.com/property/485312/reviews?loc=en_US&page=1", {
-
+    await sleep(1000);
     const res = await fetch(`${_http.urls.hotels_details_reviews}/${hotelID}/reviews/?${convertObjToQueryString(params)}`, {
       "method": "GET",
       "headers": prepareHeaders(_http.headers.hotels_headers)
@@ -18164,8 +18166,7 @@ const getDetailsReviews = async (hotelID = 0, params = {}) => {
 
 const getDetailsImages = async (hotelID = 0) => {
   try {
-    await sleep(1500); //const res = await fetch("https://hotels-com-free.p.rapidapi.com/nice/image-catalog/v2/hotels/106346", {
-
+    await sleep(1500);
     const res = await fetch(`${_http.urls.hotels_details_images}/${hotelID}`, {
       "method": "GET",
       "headers": prepareHeaders(_http.headers.hotels_headers)
@@ -18195,22 +18196,6 @@ const getPlaceInfo = async q => {
 
     _uikit.default.notify({
       message: "Address not found.",
-      status: "danger"
-    });
-  }
-};
-
-const getUnsplashImages = async q => {
-  try {
-    const res = await fetch(`${_http.urls.unsplash_images}&query=${q}`);
-    const parsedRes = await res.json();
-    console.log('getUnsplashImages', parsedRes);
-    return parsedRes;
-  } catch (error) {
-    console.log(error);
-
-    _uikit.default.notify({
-      message: "Images not found.",
       status: "danger"
     });
   }
@@ -18275,7 +18260,6 @@ const renderMap = (data = [], allItems = false) => {
   }
 
   map.fitBounds(bounds);
-  console.log('render_map_data', data);
 };
 
 const hideMap = () => {
@@ -18288,6 +18272,7 @@ const hidePagination = () => {
 
 const hideForm = () => {
   document.querySelector('#form').style.display = 'none';
+  document.querySelector('.form-wrapper').style.display = 'none';
 };
 
 const hideCards = () => {
@@ -18304,34 +18289,68 @@ const showPagination = () => {
 
 const showForm = () => {
   document.querySelector('#form').style.display = 'inline-block';
+  document.querySelector('.form-wrapper').style.display = 'flex';
 };
 
 const showCards = () => {
   document.querySelector('#cards').style.display = 'flex';
 };
 
+const showGeneralContainer = () => {
+  document.querySelector('.general-container').classList.add('visible');
+};
+
 const renderCards = (data = [], allItems = false) => {
+  showGeneralContainer();
+
   if (data.result == 'OK') {
     hideMap();
 
     if (data.data.body.searchResults.results.length) {
       cards.innerHTML = data.data.body.searchResults.results.map(({
         name: title,
-        thumbnailUrl: thumb,
+        optimizedThumbUrls: thumb,
         neighbourhood: neighbourhood,
-        id: id
+        id: id,
+        ratePlan: ratePlan,
+        roomsLeft: roomsLeft
       }) => {
+        console.log(ratePlan);
+
+        if (thumb.srpDesktop) {
+          thumb = thumb.srpDesktop;
+        } else {
+          thumb = '';
+        }
+
+        let priceInfo = "-";
+
+        if (ratePlan.price.totalPricePerStay) {
+          priceInfo = ratePlan.price.totalPricePerStay;
+        }
+
+        if (!roomsLeft) {
+          roomsLeft = '-';
+        }
+
         return `
           <div>
             <div class="uk-card uk-card-default uk-height-viewport="expand: true"">
               <div class="uk-card-media-top uk-text-center">
                 <img data-src="${thumb}" data-width="1000" data-height="500" width="100%" alt="UIkit cards" uk-img>
               </div>
-              <div class="uk-card-body uk-text-center">
-                <h3 class="uk-card-title">${title} (${neighbourhood})</h3>
+              <div class="uk-card-body uk-card uk-card-default">
+                <h3 class="uk-card-title uk-text-center">${title}</h3>
+                <p>
+                    District: ${neighbourhood}
+                    <br>
+                    Price: ${priceInfo}
+                    <br>
+                    Rooms Left: ${roomsLeft}
+                </p>
               </div>
               <div class="uk-card-footer uk-text-center">
-                <a class="uk-button uk-button-default details-btn" data-hotel-id="${id}" href="#">Details</a>
+                <a class="uk-button uk-button-default details-btn uk-button-primary" data-hotel-id="${id}" href="#">Details</a>
               </div>
             </div>
           </div>`;
@@ -18340,7 +18359,7 @@ const renderCards = (data = [], allItems = false) => {
       console.log(data.data.body.searchResults.totalCount);
 
       if (!allItems && data.data.body.searchResults.totalCount > 2) {
-        buidPagination({
+        buildPagination({
           items: data.data.body.searchResults.totalCount,
           itemsOnPage: 10,
           displayedPages: 3,
@@ -18351,6 +18370,12 @@ const renderCards = (data = [], allItems = false) => {
       links();
       renderMap(data.data.body.searchResults.results);
       scrollTo(map);
+    } else {
+      cards.innerHTML = `
+    <div class="uk-alert-danger uk-width-1-1" uk-alert>
+      <a class="uk-alert-close" uk-close></a>
+      <p>Records not found.</p>
+    </div>`;
     }
   } else {
     cards.innerHTML = `
@@ -18514,7 +18539,14 @@ const renderHotelCard = (data = []) => {
           image = hotelInfo.image;
         }
 
-        let bookUrl = `https://hotels.com/ho${hotelInfo.id}/`; //add params for book url
+        let bookUrl = `https://hotels.com/ho${hotelInfo.id}/?q-check-out=${globalParams.checkOut}&tab=description&q-check-in=${globalParams.checkIn}`;
+
+        if (room.ratePlans[0].payment.book.bookingParams.roomTypeCode) {
+          bookUrl += `#${room.ratePlans[0].payment.book.bookingParams.roomTypeCode}`;
+        } else {
+          bookUrl += `#filter-rooms-and-rates`;
+        } //add params for book url
+
 
         htmlParts.rooms += `<div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
                     <div class="${index % 2 == 1 ? 'uk-card-media-left' : 'uk-flex-last@s uk-card-media-right'} uk-cover-container">
@@ -18549,28 +18581,30 @@ const renderHotelCard = (data = []) => {
                 </div>`;
       });
     }
-    /*if(hotelInfo.trustYouReviews.length || hotelInfo.reviews.length){
-        htmlParts.reviews += `<ul uk-accordion>
-                                <li class="">
-                                    <a class="uk-accordion-title" href="#">Reviews</a><div class="uk-accordion-content">`;
-        htmlParts.reviews += hotelInfo.trustYouReviews
-            .map(({categoryName, percentage, text}) => {
-                return `
-              <div class="uk-width-1-4">
-                ${categoryName}: ${percentage} <br> ${text}
-              </div><br>`;
-            }).join('');
-        if(hotelInfo.reviews.length){
-            htmlParts.reviews += '<dl class="uk-description-list uk-description-list-divider">';
-            hotelInfo.reviews.forEach(review => {
-                htmlParts.reviews += `<dt>${(review.recommendedBy ? review.recommendedBy : 'Unknown')} - ${review.qualitativeBadgeText} ${review.rating}</dt>
-                                      <dd>${review.summary}</dd>`;
-            });
-            htmlParts.reviews += '</dl>';
-        }
-        htmlParts.reviews += '</div></li></ul>';
-    }*/
 
+    if (hotelInfo.trustYouReviews.length || hotelInfo.reviews.length) {
+      htmlParts.reviews += `<ul uk-accordion>
+                                    <li class="">
+                                        <a class="uk-accordion-title" href="#">Reviews</a><div class="uk-accordion-content">`;
+      /*htmlParts.reviews += hotelInfo.trustYouReviews
+          .map(({categoryName, percentage, text}) => {
+              return `
+            <div class="uk-width-1-4">
+              ${categoryName}: ${percentage} <br> ${text}
+            </div><br>`;
+          }).join('');*/
+
+      if (hotelInfo.reviews.length) {
+        htmlParts.reviews += '<dl class="uk-description-list uk-description-list-divider">';
+        hotelInfo.reviews.forEach(review => {
+          htmlParts.reviews += `<dt>${review.recommendedBy ? review.recommendedBy : 'Unknown'} - ${review.qualitativeBadgeText} ${review.rating}</dt>
+                                          <dd>${review.summary}</dd>`;
+        });
+        htmlParts.reviews += '</dl>';
+      }
+
+      htmlParts.reviews += '</div></li></ul>';
+    }
 
     html = `
           <div class="uk-flex uk-flex-center">
@@ -18767,7 +18801,7 @@ const clearHotelCard = () => {
   element.innerHTML = "";
 };
 
-const buidPagination = (data = {}) => {
+const buildPagination = (data = {}) => {
   if (data.currentPage > 0) data.currentPage--;
   const paginationElement = document.querySelector('.uk-pagination');
   const pagination = UIkit.pagination(paginationElement, data);
@@ -18806,8 +18840,8 @@ const getRandomIntInclusive = (min, max) => {
 
 const setRandBg = () => {
   let rand = getRandomIntInclusive(1, 11);
-  let element = document.querySelector("body");
-  element.className = "";
+  let element = document.querySelector(".form-wrapper");
+  element.className = "form-wrapper ";
   element.classList.add(`bg${rand}`);
 };
 
@@ -18815,33 +18849,10 @@ const updateBg = () => {
   setRandBg();
   const playlistEditing = setInterval(function () {
     setRandBg();
-  }, 1000 * 60);
+  }, 5 * 1000 * 60);
 };
 
 document.addEventListener("DOMContentLoaded", async () => {
-  /*
-  let dataAddress = 'Lviv';
-  let dataAddressInfo = await getPlaceInfo(dataAddress);
-  console.log(dataAddressInfo);
-  let params = {
-      lat: dataAddressInfo.lat,
-      lon: dataAddressInfo.lon,
-      checkIn: moment().add(1, 'days').format("YYYY-MM-DD"),
-      checkOut: moment().add(10, 'days').format("YYYY-MM-DD"),
-      rooms: 1,
-      pageNumber: 1,
-  };
-  let searchNearbyResults = await getSearchNearby(params);
-  console.log(searchNearbyResults);
-  let hotelID = '757219776';
-  let detailHotel = await getDetails(hotelID, params);
-  console.log(detailHotel);
-  let detailHotelReviews = await getDetailsReviews(hotelID);
-  console.log(detailHotelReviews);
-  let detailHotelImages = await getDetailsImages(hotelID);
-  console.log(detailHotelImages);
-  return;
-  */
   updateBg();
   const form = document.getElementById("form");
 
@@ -18862,7 +18873,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         let queryCheckIn = document.querySelector("[name='check_in']").value;
         let queryCheckOut = document.querySelector("[name='check_out']").value;
         let queryRooms = document.querySelector("[name='rooms']").value;
-        console.log(queryText, queryRooms);
 
         if (!queryText) {
           return;
@@ -18880,8 +18890,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         let params = {
           lat: dataAddressInfo.lat,
           lon: dataAddressInfo.lon,
-          // lat: 1,
-          // lon: -1,
           checkIn: (0, _moment.default)(queryCheckIn).format("YYYY-MM-DD"),
           checkOut: (0, _moment.default)(queryCheckOut).format("YYYY-MM-DD"),
           rooms: queryRooms || 1,
@@ -18894,14 +18902,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       } catch (error) {
         console.log(error);
         UIkit.notify({
-          message: error,
+          message: "Error",
           status: "danger"
         });
       }
     });
   }
 });
-},{"uikit":"node_modules/uikit/dist/js/uikit.js","moment":"node_modules/moment/moment.js","./http":"js/http/index.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"uikit":"node_modules/uikit/dist/js/uikit.js","moment":"node_modules/moment/moment.js","./http":"js/http/index.js"}],"C:/Users/Home/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -18929,7 +18937,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "3352" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63602" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -19105,5 +19113,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js","js/ajax.js"], null)
+},{}]},{},["C:/Users/Home/AppData/Roaming/npm/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","js/ajax.js"], null)
 //# sourceMappingURL=/ajax.8681c9e4.js.map

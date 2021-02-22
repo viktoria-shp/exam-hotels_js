@@ -1,13 +1,41 @@
 body {
-  /*height: 100%;*/
-  background-image: url(../img/bg1.jpg);
-  background-repeat: no-repeat;
-  background-size: cover;
   min-height: 100vh;
   width: 100%;
   display: flex;
+  flex-direction: column;
+  background-color: rgb(0 0 0 / 20%);
+  /*background-image: linear-gradient(to right top, #38438b, #944b94, #d75a88, #ff7e71, #ffb25f, #ffeb68);*/
+  background-image: -webkit-gradient(linear, left bottom, right top, from(#E6F4F1), color-stop(#94ABE0), color-stop(#E6F4F0), color-stop(#F6F9FF), to(#1E87F0));
+  background-image: -webkit-linear-gradient(to right top, #E6F4F1, #94ABE0, #E6F4F0,  #F6F9FF, #1E87F0);
+  background-image: -o-linear-gradient(to right top, #E6F4F1, #94ABE0, #E6F4F0,  #F6F9FF, #1E87F0);
+  background-image: linear-gradient(to right top, #E6F4F1, #94ABE0, #E6F4F0,  #F6F9FF, #1E87F0);
 }
-body::after {
+.container {
+  display: flex !important;
+  align-items: center;
+  padding: 50px 0;
+  width: 100%;
+  flex-direction: column;
+}
+.general-container {
+  display: none !important;
+}
+.general-container.visible {
+  display: flex !important;
+}
+.form-wrapper {
+  background-image: url(../img/bg1.jpg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  width: 100%;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.form-wrapper::after {
   content: "";
   background: black;
   opacity: 0.5;
@@ -16,14 +44,7 @@ body::after {
   bottom: 0;
   right: 0;
   position: absolute;
-  z-index: -1;
-}
-.container {
-  display: flex !important;
-  align-items: center;
-  padding: 50px 0;
-  width: 100%;
-  flex-direction: column;
+  z-index: 0;
 }
 .form {
   min-width: 500px;
@@ -60,6 +81,12 @@ body::after {
   }
   &__button:hover {
     background-color: #1e87f0;
+  }
+  .uk-heading-line {
+    color: #fff;
+  }
+  .main-img {
+    width: 150px;
   }
 }
 .uk-card .uk-card-body .favorite_movie:after {
@@ -130,6 +157,17 @@ body::after {
   top: 0;
   left: 0;
   background: rgba(255, 255, 255, 0.5);
+}
+
+.slick-slide {
+  align-items: center;
+  background: rgba(0, 0, 0, 0.1);
+  img {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: fit-content;
+  }
 }
 
 @for $i from 1 through 11 {

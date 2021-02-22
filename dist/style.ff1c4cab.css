@@ -1,24 +1,15 @@
 @charset "UTF-8";
 body {
-  /*height: 100%;*/
-  background-image: url(/bg1.e7999784.jpg);
-  background-repeat: no-repeat;
-  background-size: cover;
   min-height: 100vh;
   width: 100%;
   display: flex;
-}
-
-body::after {
-  content: "";
-  background: black;
-  opacity: 0.5;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  position: absolute;
-  z-index: -1;
+  flex-direction: column;
+  background-color: rgba(0, 0, 0, 0.2);
+  /*background-image: linear-gradient(to right top, #38438b, #944b94, #d75a88, #ff7e71, #ffb25f, #ffeb68);*/
+  background-image: -webkit-gradient(linear, left bottom, right top, from(#E6F4F1), color-stop(#94ABE0), color-stop(#E6F4F0), color-stop(#F6F9FF), to(#1E87F0));
+  background-image: -webkit-linear-gradient(to right top, #E6F4F1, #94ABE0, #E6F4F0, #F6F9FF, #1E87F0);
+  background-image: -o-linear-gradient(to right top, #E6F4F1, #94ABE0, #E6F4F0, #F6F9FF, #1E87F0);
+  background-image: linear-gradient(to right top, #E6F4F1, #94ABE0, #E6F4F0, #F6F9FF, #1E87F0);
 }
 
 .container {
@@ -27,6 +18,38 @@ body::after {
   padding: 50px 0;
   width: 100%;
   flex-direction: column;
+}
+
+.general-container {
+  display: none !important;
+}
+
+.general-container.visible {
+  display: flex !important;
+}
+
+.form-wrapper {
+  background-image: url(/bg1.e7999784.jpg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  width: 100%;
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+
+.form-wrapper::after {
+  content: "";
+  background: black;
+  opacity: 0.5;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  z-index: 0;
 }
 
 .form {
@@ -65,6 +88,12 @@ body::after {
 }
 .form__button:hover {
   background-color: #1e87f0;
+}
+.form .uk-heading-line {
+  color: #fff;
+}
+.form .main-img {
+  width: 150px;
 }
 
 .uk-card .uk-card-body .favorite_movie:after {
@@ -144,6 +173,17 @@ body::after {
   top: 0;
   left: 0;
   background: rgba(255, 255, 255, 0.5);
+}
+
+.slick-slide {
+  align-items: center;
+  background: rgba(0, 0, 0, 0.1);
+}
+.slick-slide img {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: fit-content;
 }
 
 .bg1 {

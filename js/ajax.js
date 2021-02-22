@@ -71,11 +71,10 @@ const getSearchNearby = async(params = {}) => {
         params.locale = params.locale || 'en_US';
         params.rooms = params.rooms || 1;
         params.currency = params.currency || 'USD';
+        //params.sortOrder = params.sortOrder || 'BEST_SELLER';
         params.pageNumber = params.pageNumber || 1;
 
         globalParams = params;
-        //await sleep(1000)
-        //const res = await fetch("https://hotels-com-free.p.rapidapi.com/srle/listing/v1/brands/hotels.com?checkIn=2021-01-27&checkOut=2021-01-28&lat=37.788719679657554&lon=-122.40057774847898&locale=en_US&rooms=1&currency=USD&pageNumber=2", {
         const res = await fetch(`${urls.hotels_search_nearby}?${convertObjToQueryString(params)}`, {
             "method": "GET",
             "headers": prepareHeaders(headers.hotels_headers)
@@ -89,7 +88,7 @@ const getSearchNearby = async(params = {}) => {
         return parsedRes;
     }catch(error){
         console.log(error);
-        //UiKit.notify({message: error, status: "danger"});
+        UiKit.notify({message: "Error", status: "danger"});
     }
     ;
     console.log('end SearchNearby');
@@ -123,7 +122,6 @@ const getDetails = async(hotelID = 0, params = {}) => {
         delete params.pageNumber;
         delete params.hotel_id;
         await sleep(1000)
-        //const res = await fetch("https://hotels-com-free.p.rapidapi.com/pde/property-details/v1/hotels.com/106346?checkIn=2021-01-27&locale=en_US&rooms=1&checkOut=2021-01-28&currency=USD&include=neighborhood", {
         const res = await fetch(`${urls.hotels_details}/${hotelID}?${convertObjToQueryString(params)}`, {
             "method": "GET",
             "headers": prepareHeaders(headers.hotels_headers)
@@ -158,7 +156,6 @@ const getDetailsReviews = async(hotelID = 0, params = {}) => {
         params.loc = params.loc || 'en_US';
         params.page = params.page || 1;
         await sleep(1000)
-        //const res = await fetch("https://hotels-com-free.p.rapidapi.com/mobile_service/property-content/v1/hotels.com/property/485312/reviews?loc=en_US&page=1", {
         const res = await fetch(`${urls.hotels_details_reviews}/${hotelID}/reviews/?${convertObjToQueryString(params)}`, {
             "method": "GET",
             "headers": prepareHeaders(headers.hotels_headers)
@@ -180,7 +177,6 @@ const getDetailsReviews = async(hotelID = 0, params = {}) => {
 const getDetailsImages = async(hotelID = 0) => {
     try{
         await sleep(1500)
-        //const res = await fetch("https://hotels-com-free.p.rapidapi.com/nice/image-catalog/v2/hotels/106346", {
         const res = await fetch(`${urls.hotels_details_images}/${hotelID}`, {
             "method": "GET",
             "headers": prepareHeaders(headers.hotels_headers)
@@ -207,18 +203,6 @@ const getPlaceInfo = async(q) => {
     }catch(error){
         console.log(error);
         UiKit.notify({message: "Address not found.", status: "danger"});
-    }
-};
-
-const getUnsplashImages = async(q) => {
-    try{
-        const res = await fetch(`${urls.unsplash_images}&query=${q}`);
-        const parsedRes = await res.json();
-        console.log('getUnsplashImages', parsedRes);
-        return parsedRes;
-    }catch(error){
-        console.log(error);
-        UiKit.notify({message: "Images not found.", status: "danger"});
     }
 };
 
@@ -276,8 +260,6 @@ const renderMap = (data = [], allItems = false) => {
         })(marker, i));
     }
     map.fitBounds(bounds);
-
-    console.log('render_map_data', data);
 }
 const hideMap = () => {
     document.querySelector('#map').style.display = 'none';
@@ -287,6 +269,7 @@ const hidePagination = () => {
 }
 const hideForm = () => {
     document.querySelector('#form').style.display = 'none';
+    document.querySelector('.form-wrapper').style.display = 'none';
 }
 const hideCards = () => {
     document.querySelector('#cards').style.display = 'none';
@@ -299,28 +282,53 @@ const showPagination = () => {
 }
 const showForm = () => {
     document.querySelector('#form').style.display = 'inline-block';
+    document.querySelector('.form-wrapper').style.display = 'flex';
 }
 const showCards = () => {
     document.querySelector('#cards').style.display = 'flex';
 }
-const renderCards = (data = [], allItems = false) => {
+const showGeneralContainer = () => {
+    document.querySelector('.general-container').classList.add('visible');
+}
 
+const renderCards = (data = [], allItems = false) => {
+    showGeneralContainer();
     if(data.result == 'OK'){
         hideMap();
         if(data.data.body.searchResults.results.length){
             cards.innerHTML = data.data.body.searchResults.results
-                .map(({name: title, thumbnailUrl: thumb, neighbourhood: neighbourhood, id: id}) => {
+                .map(({name: title, optimizedThumbUrls: thumb, neighbourhood: neighbourhood, id: id, ratePlan: ratePlan, roomsLeft: roomsLeft}) => {
+                    console.log(ratePlan);
+                    if (thumb.srpDesktop) {
+                        thumb = thumb.srpDesktop;
+                    } else {
+                        thumb = '';
+                    }
+                    let priceInfo = "-";
+                    if (ratePlan.price.totalPricePerStay) {
+                        priceInfo = ratePlan.price.totalPricePerStay;
+                    }
+                    if (!roomsLeft) {
+                        roomsLeft = '-';
+                    }
                     return `
           <div>
             <div class="uk-card uk-card-default uk-height-viewport="expand: true"">
               <div class="uk-card-media-top uk-text-center">
                 <img data-src="${thumb}" data-width="1000" data-height="500" width="100%" alt="UIkit cards" uk-img>
               </div>
-              <div class="uk-card-body uk-text-center">
-                <h3 class="uk-card-title">${title} (${neighbourhood})</h3>
+              <div class="uk-card-body uk-card uk-card-default">
+                <h3 class="uk-card-title uk-text-center">${title}</h3>
+                <p>
+                    District: ${neighbourhood}
+                    <br>
+                    Price: ${priceInfo}
+                    <br>
+                    Rooms Left: ${roomsLeft}
+                </p>
               </div>
               <div class="uk-card-footer uk-text-center">
-                <a class="uk-button uk-button-default details-btn" data-hotel-id="${id}" href="#">Details</a>
+                <a class="uk-button uk-button-default details-btn uk-button-primary" data-hotel-id="${id}" href="#">Details</a>
               </div>
             </div>
           </div>`;
@@ -329,7 +337,7 @@ const renderCards = (data = [], allItems = false) => {
             data.data.body.searchResults.totalCount = +data.data.body.searchResults.totalCount;
             console.log(data.data.body.searchResults.totalCount);
             if(!allItems && data.data.body.searchResults.totalCount > 2){
-                buidPagination({
+                buildPagination({
                     items: data.data.body.searchResults.totalCount,
                     itemsOnPage: 10,
                     displayedPages: 3,
@@ -339,6 +347,12 @@ const renderCards = (data = [], allItems = false) => {
             links();
             renderMap(data.data.body.searchResults.results);
             scrollTo(map);
+        } else {
+            cards.innerHTML = `
+    <div class="uk-alert-danger uk-width-1-1" uk-alert>
+      <a class="uk-alert-close" uk-close></a>
+      <p>Records not found.</p>
+    </div>`;
         }
     }else{
         cards.innerHTML = `
@@ -487,7 +501,12 @@ const renderHotelCard = (data = []) => {
                 } else {
                     image = hotelInfo.image;
                 }
-                let bookUrl = `https://hotels.com/ho${hotelInfo.id}/`;
+                let bookUrl = `https://hotels.com/ho${hotelInfo.id}/?q-check-out=${globalParams.checkOut}&tab=description&q-check-in=${globalParams.checkIn}`;
+                if (room.ratePlans[0].payment.book.bookingParams.roomTypeCode) {
+                    bookUrl += `#${room.ratePlans[0].payment.book.bookingParams.roomTypeCode}`;
+                } else {
+                    bookUrl += `#filter-rooms-and-rates`;
+                }
                 //add params for book url
                 htmlParts.rooms += `<div class="uk-card uk-card-default uk-grid-collapse uk-child-width-1-2@s uk-margin" uk-grid>
                     <div class="${(index % 2 == 1) ? 'uk-card-media-left' : 'uk-flex-last@s uk-card-media-right'} uk-cover-container">
@@ -523,17 +542,17 @@ const renderHotelCard = (data = []) => {
             });
         }
 
-        /*if(hotelInfo.trustYouReviews.length || hotelInfo.reviews.length){
+        if(hotelInfo.trustYouReviews.length || hotelInfo.reviews.length){
             htmlParts.reviews += `<ul uk-accordion>
                                     <li class="">
                                         <a class="uk-accordion-title" href="#">Reviews</a><div class="uk-accordion-content">`;
-            htmlParts.reviews += hotelInfo.trustYouReviews
+            /*htmlParts.reviews += hotelInfo.trustYouReviews
                 .map(({categoryName, percentage, text}) => {
                     return `
                   <div class="uk-width-1-4">
                     ${categoryName}: ${percentage} <br> ${text}
                   </div><br>`;
-                }).join('');
+                }).join('');*/
             if(hotelInfo.reviews.length){
                 htmlParts.reviews += '<dl class="uk-description-list uk-description-list-divider">';
                 hotelInfo.reviews.forEach(review => {
@@ -543,7 +562,7 @@ const renderHotelCard = (data = []) => {
                 htmlParts.reviews += '</dl>';
             }
             htmlParts.reviews += '</div></li></ul>';
-        }*/
+        }
         html = `
           <div class="uk-flex uk-flex-center">
             <div class="uk-card uk-card-default  uk-width-1-1@m uk-width-1-1">
@@ -704,7 +723,6 @@ const prepareHotelInfo = (data) => {
             return item.type == 'HOTEL_FEATURE' || item.type == 'LOCATION_SECTION' ? true : false;
         });
     }
-
     console.log('hotelInfo', hotelInfo);
     return hotelInfo;
 }
@@ -712,7 +730,7 @@ const clearHotelCard = () => {
     const element = document.querySelector('#cardHotel');
     element.innerHTML = "";
 }
-const buidPagination = (data = {}) => {
+const buildPagination = (data = {}) => {
     if(data.currentPage > 0) data.currentPage--;
     const paginationElement = document.querySelector('.uk-pagination');
     const pagination = UIkit.pagination(paginationElement, data);
@@ -747,42 +765,18 @@ const getRandomIntInclusive = (min, max) => {
 
 const setRandBg = () => {
     let rand = getRandomIntInclusive(1, 11);
-    let element = document.querySelector("body");
-    element.className = "";
+    let element = document.querySelector(".form-wrapper");
+    element.className = "form-wrapper ";
     element.classList.add(`bg${rand}`);
 }
 const updateBg = () => {
     setRandBg();
     const playlistEditing = setInterval(function(){
         setRandBg();
-    }, 1000 * 60);
+    }, 5 * 1000 * 60);
 }
 
 document.addEventListener("DOMContentLoaded", async() => {
-    /*
-    let dataAddress = 'Lviv';
-    let dataAddressInfo = await getPlaceInfo(dataAddress);
-    console.log(dataAddressInfo);
-    let params = {
-        lat: dataAddressInfo.lat,
-        lon: dataAddressInfo.lon,
-        checkIn: moment().add(1, 'days').format("YYYY-MM-DD"),
-        checkOut: moment().add(10, 'days').format("YYYY-MM-DD"),
-        rooms: 1,
-        pageNumber: 1,
-    };
-    let searchNearbyResults = await getSearchNearby(params);
-    console.log(searchNearbyResults);
-    let hotelID = '757219776';
-    let detailHotel = await getDetails(hotelID, params);
-    console.log(detailHotel);
-    let detailHotelReviews = await getDetailsReviews(hotelID);
-    console.log(detailHotelReviews);
-    let detailHotelImages = await getDetailsImages(hotelID);
-    console.log(detailHotelImages);
-    return;
-    */
-
     updateBg();
     const form = document.getElementById("form");
     if(form && form.length){
@@ -799,7 +793,6 @@ document.addEventListener("DOMContentLoaded", async() => {
                 let queryCheckIn = document.querySelector("[name='check_in']").value;
                 let queryCheckOut = document.querySelector("[name='check_out']").value;
                 let queryRooms = document.querySelector("[name='rooms']").value;
-                console.log(queryText, queryRooms);
                 if(!queryText){
                     return;
                 }
@@ -813,8 +806,6 @@ document.addEventListener("DOMContentLoaded", async() => {
                 let params = {
                     lat: dataAddressInfo.lat,
                     lon: dataAddressInfo.lon,
-                    // lat: 1,
-                    // lon: -1,
                     checkIn: moment(queryCheckIn).format("YYYY-MM-DD"),
                     checkOut: moment(queryCheckOut).format("YYYY-MM-DD"),
                     rooms: queryRooms || 1,
@@ -826,7 +817,7 @@ document.addEventListener("DOMContentLoaded", async() => {
                 return;
             }catch(error){
                 console.log(error);
-                UIkit.notify({message: error, status: "danger"});
+                UIkit.notify({message: "Error", status: "danger"});
             }
         });
     }
